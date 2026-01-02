@@ -1,0 +1,144 @@
+# ==============================================================================
+# GraphSAGE Training Project .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Python
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ------------------------------------------------------------------------------
+# Virtual Environments
+# ------------------------------------------------------------------------------
+venv/
+ENV/
+env/
+.venv/
+
+# ------------------------------------------------------------------------------
+# IDE / Editor
+# ------------------------------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# ------------------------------------------------------------------------------
+# Jupyter Notebooks
+# ------------------------------------------------------------------------------
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# ------------------------------------------------------------------------------
+# Data Files (IMPORTANT: src/data/ is CODE, data/ is DATA)
+# ------------------------------------------------------------------------------
+# Ignore data directory contents (generated/downloaded data)
+# But keep the .gitkeep files to preserve directory structure
+data/raw/*
+data/processed/*
+data/walks/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/walks/.gitkeep
+
+# NOTE: src/data/ contains Python source code and is NOT ignored
+# The pattern "data/" only matches the top-level data/ directory
+
+# ------------------------------------------------------------------------------
+# Training Outputs
+# ------------------------------------------------------------------------------
+# Checkpoints (model weights during training)
+checkpoints/*
+!checkpoints/.gitkeep
+
+# Logs (training logs, tensorboard)
+logs/*
+!logs/.gitkeep
+
+# Exports (final model exports)
+exports/*
+!exports/.gitkeep
+
+# ------------------------------------------------------------------------------
+# Colab / Notebook Outputs
+# ------------------------------------------------------------------------------
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+embeddings_tsne.png
+similarity_distribution.png
+
+# ------------------------------------------------------------------------------
+# Model Files
+# ------------------------------------------------------------------------------
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.onnx
+
+# ------------------------------------------------------------------------------
+# Large Data Files
+# ------------------------------------------------------------------------------
+*.csv
+*.parquet
+*.feather
+*.npy
+*.npz
+*.json
+!config/*.json
+
+# ------------------------------------------------------------------------------
+# OS Files
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ------------------------------------------------------------------------------
+# Misc
+# ------------------------------------------------------------------------------
+*.log
+*.tmp
+*.temp
+*.bak
+.cache/
+*.cache
+
+# ------------------------------------------------------------------------------
+# Secrets (never commit these!)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.yaml
