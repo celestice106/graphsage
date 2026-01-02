@@ -1,0 +1,43 @@
+# GraphSAGE Training Requirements
+# Compatible with Google Colab (as of January 2025)
+#
+# For Google Colab installation:
+#   !pip install torch-geometric
+#   !pip install -r requirements.txt
+#
+# Note: torch and torch-geometric are pre-installed in Colab,
+# so we don't specify versions to avoid conflicts.
+
+# Core Dependencies
+# -----------------
+# PyTorch and PyTorch Geometric are pre-installed in Colab
+# torch>=2.0.0
+# torch-geometric>=2.4.0
+
+# Data Processing
+networkx>=3.0
+numpy>=1.23.0
+
+# Configuration
+pyyaml>=6.0
+
+# Evaluation Metrics
+scikit-learn>=1.2.0
+
+# Visualization (optional, for notebooks)
+matplotlib>=3.7.0
+
+# Progress bars (optional)
+tqdm>=4.65.0
+
+# For Memory R1 integration (optional)
+pydantic>=2.0.0
+
+# For model export (optional)
+# onnx>=1.14.0
+
+# Development Dependencies (optional)
+# ------------------------------------
+# pytest>=7.3.0
+# black>=23.0.0
+# isort>=5.12.0
