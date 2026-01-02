@@ -142,3 +142,6 @@ desktop.ini
 *.key
 credentials.json
 secrets.yaml
+TRAINING_SKILLS.md
+
+!src/data/

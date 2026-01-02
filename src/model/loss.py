@@ -33,11 +33,17 @@ class SkipGramLoss(nn.Module):
     The loss uses log-sigmoid for numerical stability and supports
     any number of negative samples per positive pair.
 
+    IMPORTANT: When using L2-normalized embeddings, dot products are bounded
+    to [-1, 1], which limits sigmoid outputs to [0.27, 0.73]. The scale_factor
+    parameter addresses this by scaling scores before sigmoid, allowing the
+    model to achieve higher positive similarity and lower negative similarity.
+
     Example:
         >>> import torch
         >>> from src.model import SkipGramLoss
         >>>
-        >>> loss_fn = SkipGramLoss()
+        >>> # scale_factor=5.0 maps dot product of 1.0 to sigmoid(5.0)=0.993
+        >>> loss_fn = SkipGramLoss(scale_factor=5.0)
         >>>
         >>> # Embeddings for all nodes
         >>> embeddings = torch.randn(100, 64)
@@ -53,9 +59,19 @@ class SkipGramLoss(nn.Module):
         >>> loss = loss_fn(embeddings, targets, contexts, negatives)
     """
 
-    def __init__(self):
-        """Initialize skip-gram loss."""
+    def __init__(self, scale_factor: float = 5.0):
+        """
+        Initialize skip-gram loss.
+
+        Args:
+            scale_factor: Multiplier for dot product scores before sigmoid.
+                         For L2-normalized embeddings, this is critical:
+                         - scale=1.0: sigmoid bounded to [0.27, 0.73] (can't learn!)
+                         - scale=5.0: sigmoid can reach [0.007, 0.993] (recommended)
+                         - scale=10.0: sigmoid can reach [0.00005, 0.99995] (may be unstable)
+        """
         super().__init__()
+        self.scale_factor = scale_factor
 
     def forward(
         self,
@@ -101,6 +117,13 @@ class SkipGramLoss(nn.Module):
             target_emb.unsqueeze(2)
         ).squeeze(2)
 
+        # === Apply scale factor ===
+        # Critical for L2-normalized embeddings!
+        # Without scaling: dot products in [-1, 1] -> sigmoid in [0.27, 0.73]
+        # With scale=5.0: scaled scores in [-5, 5] -> sigmoid can reach [0.007, 0.993]
+        pos_scores = pos_scores * self.scale_factor
+        neg_scores = neg_scores * self.scale_factor
+
         # === Skip-gram loss ===
         # Positive term: maximize log(sigmoid(pos_score))
         # Negative term: maximize log(sigmoid(-neg_score))
@@ -139,19 +162,23 @@ class SkipGramLoss(nn.Module):
         context_emb = embeddings[contexts]
         negative_emb = embeddings[negatives]
 
-        # Scores
-        pos_scores = (target_emb * context_emb).sum(dim=1)
-        neg_scores = torch.bmm(
+        # Raw dot product scores (before scaling)
+        pos_scores_raw = (target_emb * context_emb).sum(dim=1)
+        neg_scores_raw = torch.bmm(
             negative_emb,
             target_emb.unsqueeze(2)
         ).squeeze(2)
 
-        # Losses
+        # Apply scale factor for loss computation
+        pos_scores = pos_scores_raw * self.scale_factor
+        neg_scores = neg_scores_raw * self.scale_factor
+
+        # Losses (using scaled scores)
         pos_loss = -F.logsigmoid(pos_scores).mean()
         neg_loss = -F.logsigmoid(-neg_scores).mean()
         total_loss = pos_loss + neg_loss
 
-        # Probabilities for monitoring
+        # Probabilities for monitoring (using scaled scores)
         pos_prob = torch.sigmoid(pos_scores).mean()
         neg_prob = torch.sigmoid(neg_scores).mean()
 
@@ -159,10 +186,10 @@ class SkipGramLoss(nn.Module):
             'total_loss': total_loss.item(),
             'pos_loss': pos_loss.item(),
             'neg_loss': neg_loss.item(),
-            'pos_score_mean': pos_scores.mean().item(),
-            'neg_score_mean': neg_scores.mean().item(),
-            'pos_prob': pos_prob.item(),  # Should be high (~1)
-            'neg_prob': neg_prob.item(),  # Should be low (~0)
+            'pos_score_mean': pos_scores_raw.mean().item(),  # Raw dot product for interpretability
+            'neg_score_mean': neg_scores_raw.mean().item(),  # Raw dot product for interpretability
+            'pos_prob': pos_prob.item(),  # Should be high (~1) - now achievable!
+            'neg_prob': neg_prob.item(),  # Should be low (~0) - now achievable!
         }
 
         return total_loss, details
@@ -304,12 +331,16 @@ def create_loss(loss_type: str = 'skipgram', **kwargs) -> nn.Module:
     Args:
         loss_type: Type of loss ('skipgram', 'margin', 'infonce')
         **kwargs: Additional arguments for specific loss types
+            - scale_factor (float): For skipgram loss, scales dot products before sigmoid.
+                                   Default 5.0, critical for L2-normalized embeddings.
+            - margin (float): For margin loss, default 1.0
+            - temperature (float): For infonce loss, default 0.07
 
     Returns:
         Loss module
     """
     if loss_type == 'skipgram':
-        return SkipGramLoss()
+        return SkipGramLoss(scale_factor=kwargs.get('scale_factor', 5.0))
     elif loss_type == 'margin':
         return MarginRankingLoss(margin=kwargs.get('margin', 1.0))
     elif loss_type == 'infonce':
