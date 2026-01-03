@@ -4,16 +4,22 @@ A production-ready pipeline for training GraphSAGE models to generate structural
 
 ## Overview
 
-This project trains a Graph Neural Network (GraphSAGE) to learn **structural embeddings** - vector representations that capture how nodes are connected in a graph. These embeddings complement text embeddings in Memory R1's dual-embedding retrieval system.
+This project trains a Graph Neural Network (GraphSAGE) to learn **structural embeddings** - vector representations that capture how nodes are connected in a graph. These embeddings complement text embeddings in a dual-embedding system that is used by Reinforcement Learning agents for enhancing memory retrieval.
 
 ### The Problem We Solve
 
-In Memory R1, memories form a graph through relationships:
+Current AI chatbots are **stateless**—they forget everything once a user ends their session. While naive RAG (Retrieval-Augmented Generation) approaches can partially address this by storing and retrieving past conversations, they lack awareness of **temporal context**: information from the distant past may still be highly relevant to today's questions, but simple similarity-based retrieval cannot capture this.
+
+Our solution introduces a **dual-embedding system** (structural + semantic) to represent each memory entry in a memory bank. Combined with two **RL-trained agents** that operate and distill memories across sessions (inspired by the [Memory R1 paper](https://arxiv.org/abs/2508.19828)), this architecture successfully overcomes the long-term memory problem. Structural embeddings enable agents to understand not just *what* a memory contains, but *where* and *when* it exists in the long-horizon conversation graph spanning multiple sessions.
+
+In the Memory Bank, memories form a graph through relationships:
 - `caused_by`: Memory A caused Memory B
 - `next_event`: Memory A happened before Memory B
 - `mention`: Memory mentions Entity E
 
 Text embeddings capture **what** a memory says. Structural embeddings capture **where** a memory sits in the causal/temporal graph - enabling retrieval of structurally relevant memories even when text similarity is low.
+
+GraphSAGE model learns to **encode** nodes' positional information into embeddings. Nodes that are close to each other in the graph may have similar embeddings, even if they are not directly connected.
 
 ### Our Approach: Random Walk Co-occurrence
 
@@ -246,7 +252,7 @@ embeddings = encoder.encode((edge_index, features))
 
 If no features are provided, structural features (in/out degree, centrality, etc.) are computed automatically.
 
-## Integration with Memory R1
+## Integration with Memory Bank 
 
 ```python
 from scripts.encode import GraphSAGEEncoder
@@ -261,20 +267,6 @@ structural_emb = encoder.encode(memory_graph)
 text_emb = text_encoder(query)
 combined_score = alpha * (query @ text_emb.T) + (1-alpha) * (query_struct @ structural_emb.T)
 ```
-
-## Lessons Learned
-
-### 1. Scale Factor for Normalized Embeddings
-When using L2-normalized embeddings with sigmoid-based losses, **always scale** the dot products. Without this, training appears stuck but is actually bounded by math.
-
-### 2. Synthetic Data Limitations
-Random synthetic graphs have uniform structure. `neg_prob` may not drop below 0.5 because there are no truly dissimilar nodes. Real data with semantic structure will show better separation.
-
-### 3. Colab Session Management
-Long training jobs need checkpointing. Colab disconnects after ~30-90 minutes of inactivity. Use the anti-idle script or save to Google Drive.
-
-### 4. Loss vs Evaluation Metrics
-Low loss ≠ good embeddings. Always check evaluation metrics (AUC, neighbor similarity gap). Our model had loss ~0.93 but AUC ~0.98.
 
 ## Requirements
 
@@ -296,3 +288,4 @@ MIT License - See LICENSE file.
 - GraphSAGE: [Hamilton et al., 2017](https://arxiv.org/abs/1706.02216)
 - Node2Vec random walks: [Grover & Leskovec, 2016](https://arxiv.org/abs/1607.00653)
 - Skip-gram objective: [Mikolov et al., 2013](https://arxiv.org/abs/1301.3781)
+- Memory R1: [Sikuan Yan et al., 2025](https://arxiv.org/abs/2508.19828)
