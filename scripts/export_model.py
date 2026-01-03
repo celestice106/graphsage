@@ -2,7 +2,7 @@
 """
 Model Export Script.
 
-This script exports trained GraphSAGE models for production use:
+This script exports trained GraphSAGE models.
 - PyTorch format (for Python inference)
 - TorchScript format (for C++ inference)
 - ONNX format (for cross-platform deployment)
@@ -23,7 +23,7 @@ sys.path.insert(0, str(project_root))
 import torch
 
 from config import load_config
-from src.model import ProductionGraphSAGE
+from src.model import GraphSAGE
 
 
 def parse_args():
@@ -59,7 +59,7 @@ def export_pytorch(model, config, output_dir: Path):
     """Export model in PyTorch format."""
     print("\nExporting PyTorch format...")
 
-    output_path = output_dir / 'graphsage_production.pt'
+    output_path = output_dir / 'graphsage.pt'
 
     torch.save({
         'model_state_dict': model.state_dict(),
@@ -153,7 +153,7 @@ def main():
     feature_dim = config.get('features', {}).get('dimensions', 7)
 
     # Create model
-    model = ProductionGraphSAGE(
+    model = GraphSAGE(
         in_channels=feature_dim,
         hidden_channels=model_config.get('hidden_dim', 64),
         out_channels=model_config.get('output_dim', 64),

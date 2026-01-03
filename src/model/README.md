@@ -5,7 +5,7 @@ This module implements the GraphSAGE model architecture and loss functions for l
 ## Components
 
 ### graphsage.py
-- **ProductionGraphSAGE**: Main model for training and inference
+- **GraphSAGE**: Main model for training and inference
 - **FlexibleGraphSAGE**: Experimental version with more options
 - **create_model()**: Factory function to create model from config
 
@@ -62,9 +62,9 @@ Where σ is the sigmoid function.
 ### Creating the Model
 
 ```python
-from src.model import ProductionGraphSAGE
+from src.model import GraphSAGE
 
-model = ProductionGraphSAGE(
+model = GraphSAGE(
     in_channels=7,      # 7 features per node
     hidden_channels=64, # Hidden dimension
     out_channels=64,    # Embedding dimension

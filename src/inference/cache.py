@@ -6,7 +6,7 @@ This module implements caching for computed embeddings with support for:
 - Partial invalidation (when specific nodes change)
 - Lazy recomputation on access
 
-The cache is designed for the Memory R1 use case where the graph evolves
+The cache is designed for the Memory Bank use case where the graph evolves
 during RL training, requiring efficient embedding updates.
 """
 

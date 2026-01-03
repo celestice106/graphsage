@@ -4,31 +4,31 @@ Inference Module for Production Deployment.
 This module provides production-ready inference components:
 - Efficient encoder for computing embeddings
 - Caching with dirty tracking for dynamic graphs
-- Integration interface for Memory R1
+- Integration interface for Memory Bank
 
 Components:
-    MemoryR1StructuralEncoder: Main encoder for Memory R1 integration
+    StructuralEncoder: Main encoder 
     EmbeddingCache: Cache with invalidation support
 
 Example:
-    >>> from src.inference import MemoryR1StructuralEncoder
+    >>> from src.inference import StructuralEncoder
     >>>
-    >>> encoder = MemoryR1StructuralEncoder(
-    ...     model_path='exports/graphsage_production.pt',
+    >>> encoder = StructuralEncoder(
+    ...     model_path='exports/graphsage.pt',
     ...     device='cuda'
     ... )
     >>>
     >>> # Get embeddings for all nodes
-    >>> embeddings = encoder.encode_all(edge_index, num_nodes, full_graph)
+    >>> embeddings = encoder.encode_all(full_graph)
     >>>
     >>> # Get embedding for single node
-    >>> emb = encoder.encode_single(node_idx, edge_index, num_nodes, full_graph)
+    >>> emb = encoder.encode_single(node_idx, full_graph)
 """
 
-from .encoder import MemoryR1StructuralEncoder
+from .encoder import StructuralEncoder
 from .cache import EmbeddingCache
 
 __all__ = [
-    'MemoryR1StructuralEncoder',
+    'StructuralEncoder',
     'EmbeddingCache',
 ]

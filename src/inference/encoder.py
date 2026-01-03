@@ -1,12 +1,12 @@
 """
-Production Structural Encoder for Memory R1 Integration.
+Structural Encoder for Memory Bank Integration.
 
 This module provides the main interface for computing structural embeddings
-in the Memory R1 system. It handles:
+in the Memory Bank system. It handles:
 - Loading trained GraphSAGE model
 - Computing embeddings efficiently
 - Caching for repeated access
-- Integration with Memory R1's graph structure
+- Integration with Memory Bank's graph structure
 
 The encoder is designed for sub-millisecond inference latency in production.
 """
@@ -17,15 +17,15 @@ from typing import Optional, Dict, Any, List
 from pathlib import Path
 import time
 
-from ..model.graphsage import ProductionGraphSAGE
+from ..model.graphsage import GraphSAGE
 from ..data.feature_extractor import MemoryFeatureExtractor
 from ..data.view_extractor import GraphSAGEViewExtractor, GraphSAGEView
 from .cache import EmbeddingCache
 
 
-class MemoryR1StructuralEncoder:
+class StructuralEncoder:
     """
-    Production structural encoder for Memory R1 integration.
+    Structural encoder for Memory Bank integration.
 
     This is the main interface for computing structural embeddings:
     1. Extracts memory-only view from full graph
@@ -37,11 +37,11 @@ class MemoryR1StructuralEncoder:
     hasn't changed.
 
     Example:
-        >>> from src.inference import MemoryR1StructuralEncoder
+        >>> from src.inference import StructuralEncoder
         >>>
         >>> # Initialize encoder
-        >>> encoder = MemoryR1StructuralEncoder(
-        ...     model_path='exports/graphsage_production.pt',
+        >>> encoder = StructuralEncoder(
+        ...     model_path='exports/graphsage.pt',
         ...     device='cuda'
         ... )
         >>>
@@ -58,7 +58,7 @@ class MemoryR1StructuralEncoder:
     def __init__(
         self,
         model_path: Optional[str] = None,
-        model: Optional[ProductionGraphSAGE] = None,
+        model: Optional[GraphSAGE] = None,
         device: str = 'cuda',
         use_compile: bool = False,
         cache_embeddings: bool = True,
@@ -104,7 +104,7 @@ class MemoryR1StructuralEncoder:
         self.last_view: Optional[GraphSAGEView] = None
         self._inference_times: List[float] = []
 
-    def _load_model(self, path: str) -> ProductionGraphSAGE:
+    def _load_model(self, path: str) -> GraphSAGE:
         """
         Load model from checkpoint.
 
@@ -125,7 +125,7 @@ class MemoryR1StructuralEncoder:
             feature_config = self.config.get('features', {})
 
         # Create model with saved config
-        model = ProductionGraphSAGE(
+        model = GraphSAGE(
             in_channels=feature_config.get('dimensions', 7),
             hidden_channels=model_config.get('hidden_dim', 64),
             out_channels=model_config.get('output_dim', 64),
@@ -150,7 +150,7 @@ class MemoryR1StructuralEncoder:
         Get embeddings for all memory nodes.
 
         Args:
-            full_graph: Full Memory R1 graph (MockGraphStore or compatible)
+            full_graph: Full Memory Bank graph (MockGraphStore or compatible)
             force_recompute: If True, ignore cache
 
         Returns:
@@ -209,7 +209,7 @@ class MemoryR1StructuralEncoder:
 
         Args:
             node_idx: Node index (0-indexed)
-            full_graph: Full Memory R1 graph
+            full_graph: Full Memory Bank graph
             force_recompute: If True, ignore cache
 
         Returns:
@@ -230,7 +230,7 @@ class MemoryR1StructuralEncoder:
 
         Args:
             memory_id: Original memory node ID (e.g., 'mem_0001')
-            full_graph: Full Memory R1 graph
+            full_graph: Full Memory Bank graph
             force_recompute: If True, ignore cache
 
         Returns:
@@ -259,7 +259,7 @@ class MemoryR1StructuralEncoder:
 
         Args:
             node_indices: List of node indices
-            full_graph: Full Memory R1 graph
+            full_graph: Full Memory Bank graph
             force_recompute: If True, ignore cache
 
         Returns:
@@ -339,7 +339,7 @@ class MemoryR1StructuralEncoder:
         }, path)
 
     @classmethod
-    def load(cls, path: str, device: str = 'cuda', **kwargs) -> 'MemoryR1StructuralEncoder':
+    def load(cls, path: str, device: str = 'cuda', **kwargs) -> 'StructuralEncoder':
         """
         Load encoder from saved file.
 
@@ -355,7 +355,7 @@ class MemoryR1StructuralEncoder:
 
 
 def benchmark_encoder(
-    encoder: MemoryR1StructuralEncoder,
+    encoder: StructuralEncoder,
     full_graph,
     num_iterations: int = 100
 ) -> Dict:

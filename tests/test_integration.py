@@ -20,9 +20,9 @@ from src.data import GraphSAGEDataset, GraphLoader
 from src.data.view_extractor import GraphSAGEViewExtractor
 from src.data.feature_extractor import MemoryFeatureExtractor
 from src.walks import RandomWalkGenerator, CooccurrencePairSampler, DegreeBiasedNegativeSampler
-from src.model import ProductionGraphSAGE, SkipGramLoss
+from src.model import GraphSAGE, SkipGramLoss
 from src.training import GraphSAGETrainer
-from src.inference import MemoryR1StructuralEncoder
+from src.inference import StructuralEncoder
 from src.utils.metrics import evaluate_embeddings
 
 
@@ -125,7 +125,7 @@ class TestEndToEndPipeline:
         )
 
         # Create model
-        model = ProductionGraphSAGE(
+        model = GraphSAGE(
             in_channels=7,
             hidden_channels=32,  # Smaller for testing
             out_channels=32
@@ -164,7 +164,7 @@ class TestEndToEndPipeline:
         # Create and train minimal model
         full_graph = GraphLoader.create_mock(num_memories=50, seed=42)
 
-        model = ProductionGraphSAGE(
+        model = GraphSAGE(
             in_channels=7,
             hidden_channels=32,
             out_channels=32
@@ -178,7 +178,7 @@ class TestEndToEndPipeline:
         }, model_path)
 
         # Create encoder
-        encoder = MemoryR1StructuralEncoder(
+        encoder = StructuralEncoder(
             model_path=str(model_path),
             device='cuda',
             cache_embeddings=True
@@ -210,7 +210,7 @@ class TestEndToEndPipeline:
         data = dataset.get_data(device=device)
 
         # Create model
-        model = ProductionGraphSAGE(
+        model = GraphSAGE(
             in_channels=7,
             hidden_channels=32,
             out_channels=32

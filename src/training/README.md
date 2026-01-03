@@ -54,7 +54,7 @@ Positive Pairs + Negative Sampler
 
 ```python
 from src.training import GraphSAGETrainer
-from src.model import ProductionGraphSAGE
+from src.model import GraphSAGE
 from src.walks import DegreeBiasedNegativeSampler, CooccurrencePairSampler
 
 # Prepare data
@@ -62,7 +62,7 @@ pairs = pair_sampler.extract_pairs(walks)
 neg_sampler = DegreeBiasedNegativeSampler(edge_index, num_nodes, device='cuda')
 
 # Create model
-model = ProductionGraphSAGE().cuda()
+model = GraphSAGE().cuda()
 
 # Create trainer
 trainer = GraphSAGETrainer(
@@ -123,7 +123,7 @@ The trainer is designed for GPU-only training:
 ```python
 device = torch.device('cuda')
 
-model = ProductionGraphSAGE().to(device)
+model = GraphSAGE().to(device)
 features = features.to(device)
 edge_index = edge_index.to(device)
 ```

@@ -13,17 +13,17 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.model import ProductionGraphSAGE, SkipGramLoss
+from src.model import GraphSAGE, SkipGramLoss
 from src.model.loss import MarginRankingLoss, InfoNCELoss
 
 
-class TestProductionGraphSAGE:
+class TestGraphSAGE:
     """Tests for GraphSAGE model."""
 
     @pytest.fixture
     def model(self):
         """Create model for testing."""
-        return ProductionGraphSAGE(
+        return GraphSAGE(
             in_channels=7,
             hidden_channels=64,
             out_channels=64,

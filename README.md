@@ -1,6 +1,6 @@
 # GraphSAGE Structural Embedding Training
 
-A production-ready pipeline for training GraphSAGE models to generate structural embeddings for memory graphs. Designed for the Memory R1-style Memory Bank with dual-embedding system.
+A pipeline for training GraphSAGE models to generate structural embeddings for memory graphs. Designed for the Memory R1-style Memory Bank with dual-embedding system.
 
 ## Overview
 
@@ -61,8 +61,7 @@ python scripts/export_model.py --checkpoint checkpoints/best_model.pt
 ```
 graphsage_training/
 ├── config/                 # Configuration files
-│   ├── default.yaml       # Default hyperparameters
-│   └── production.yaml    # Production settings
+│   └── config.yaml       # Default hyperparameters
 │
 ├── src/                   # Source code
 │   ├── data/             # Graph loading & feature extraction
@@ -86,8 +85,8 @@ graphsage_training/
 │   │   ├── batch_generator.py   # Batch creation
 │   │   └── callbacks.py         # Early stopping, checkpoints
 │   │
-│   ├── inference/        # Production inference
-│   │   ├── encoder.py           # Memory R1 encoder interface
+│   ├── inference/        
+│   │   ├── encoder.py           # Memory Bank encoder interface
 │   │   └── cache.py             # Embedding cache
 │   │
 │   └── utils/            # Utilities
@@ -199,17 +198,13 @@ negatives:
 
 ## Evaluation Metrics
 
-After training, we evaluate embedding quality:
+The quality of embeddings after training:
 
-| Metric | Good Value | Meaning |
-|--------|------------|---------|
-| Neighbor Similarity Gap | > 0.1 | Connected nodes more similar than random |
-| Link Prediction AUC | > 0.7 | Can predict edges from embeddings |
-| Avg Precision | > 0.7 | Precision-recall quality |
-| Is Normalized | True | Embeddings are unit vectors |
-| Is Collapsed | False | Embeddings aren't all identical |
-
-Our results: **AUC = 0.978**, **Gap = 0.66** (excellent!)
+| Metric | Good Value |  
+|--------|------------|
+| Neighbor Similarity Gap | 0.66 | 
+| Link Prediction AUC | 0.978 | 
+| Avg Precision | 0.927 | 
 
 ## Inference Endpoint
 
@@ -219,7 +214,7 @@ The encoder supports multiple input formats for easy integration:
 from scripts.encode import GraphSAGEEncoder
 
 # Load trained model
-encoder = GraphSAGEEncoder('exports/graphsage_production.pt')
+encoder = GraphSAGEEncoder('exports/graphsage.pt')
 
 # === Option 1: PyTorch Geometric ===
 from torch_geometric.data import Data
@@ -258,7 +253,7 @@ If no features are provided, structural features (in/out degree, centrality, etc
 from scripts.encode import GraphSAGEEncoder
 
 # Load trained model
-encoder = GraphSAGEEncoder('exports/graphsage_production.pt', device='cuda')
+encoder = GraphSAGEEncoder('exports/graphsage.pt', device='cuda')
 
 # Compute structural embeddings for all memories
 structural_emb = encoder.encode(memory_graph)

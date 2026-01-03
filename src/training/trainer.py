@@ -24,7 +24,7 @@ import random
 import time
 from pathlib import Path
 
-from ..model.graphsage import ProductionGraphSAGE
+from ..model.graphsage import GraphSAGE
 from ..model.loss import SkipGramLoss
 from ..walks import DegreeBiasedNegativeSampler
 from .batch_generator import BatchGenerator, split_pairs_train_val
@@ -50,11 +50,11 @@ class GraphSAGETrainer:
 
     Example:
         >>> from src.training import GraphSAGETrainer
-        >>> from src.model import ProductionGraphSAGE
+        >>> from src.model import GraphSAGE
         >>> from config import load_config
         >>>
         >>> config = load_config()
-        >>> model = ProductionGraphSAGE().cuda()
+        >>> model = GraphSAGE().cuda()
         >>>
         >>> trainer = GraphSAGETrainer(
         ...     model=model,
@@ -70,7 +70,7 @@ class GraphSAGETrainer:
 
     def __init__(
         self,
-        model: ProductionGraphSAGE,
+        model: GraphSAGE,
         features: torch.Tensor,
         edge_index: torch.Tensor,
         positive_pairs: List[Tuple[int, int]],
@@ -410,7 +410,7 @@ def train_graphsage(
     walks: List[List[int]],
     config: Dict[str, Any],
     device: Optional[torch.device] = None
-) -> Tuple[ProductionGraphSAGE, torch.Tensor]:
+) -> Tuple[GraphSAGE, torch.Tensor]:
     """
     High-level function to train GraphSAGE from dataset and walks.
 
@@ -426,7 +426,7 @@ def train_graphsage(
         Tuple of (trained_model, embeddings)
     """
     from ..walks import CooccurrencePairSampler, DegreeBiasedNegativeSampler
-    from ..model import ProductionGraphSAGE
+    from ..model import GraphSAGE
 
     # Setup device
     if device is None:
@@ -457,7 +457,7 @@ def train_graphsage(
 
     # Create model
     model_config = config.get('model', {})
-    model = ProductionGraphSAGE(
+    model = GraphSAGE(
         in_channels=config.get('features', {}).get('dimensions', 7),
         hidden_channels=model_config.get('hidden_dim', 64),
         out_channels=model_config.get('output_dim', 64),

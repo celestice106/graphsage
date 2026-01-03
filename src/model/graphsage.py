@@ -1,5 +1,5 @@
 """
-Production GraphSAGE Model.
+GraphSAGE Model.
 
 This module implements the main GraphSAGE model for learning structural
 embeddings of memory nodes. The model uses message passing to aggregate
@@ -31,9 +31,9 @@ from torch_geometric.nn import SAGEConv
 from typing import Optional, List
 
 
-class ProductionGraphSAGE(nn.Module):
+class GraphSAGE(nn.Module):
     """
-    Production-ready 2-layer GraphSAGE for Memory R1 structural embeddings.
+    GraphSAGE for Memory R1 structural embeddings.
 
     This model is designed for:
     - Quality embeddings that capture graph structure
@@ -48,9 +48,9 @@ class ProductionGraphSAGE(nn.Module):
 
     Example:
         >>> import torch
-        >>> from src.model import ProductionGraphSAGE
+        >>> from src.model import GraphSAGE
         >>>
-        >>> model = ProductionGraphSAGE(
+        >>> model = GraphSAGE(
         ...     in_channels=7,
         ...     hidden_channels=64,
         ...     out_channels=64,
@@ -167,7 +167,7 @@ class FlexibleGraphSAGE(nn.Module):
     - Residual connections (optional)
     - Layer normalization (optional)
 
-    Use this for experimentation. For production, use ProductionGraphSAGE.
+    Use this for experimentation.
     """
 
     def __init__(
@@ -296,7 +296,7 @@ class FlexibleGraphSAGE(nn.Module):
         return x
 
 
-def create_model(config: dict, device: Optional[torch.device] = None) -> ProductionGraphSAGE:
+def create_model(config: dict, device: Optional[torch.device] = None) -> GraphSAGE:
     """
     Create GraphSAGE model from config.
 
@@ -305,11 +305,11 @@ def create_model(config: dict, device: Optional[torch.device] = None) -> Product
         device: Device to place model on
 
     Returns:
-        ProductionGraphSAGE model
+        GraphSAGE model
     """
     model_config = config.get('model', {})
 
-    model = ProductionGraphSAGE(
+    model = GraphSAGE(
         in_channels=config.get('features', {}).get('dimensions', 7),
         hidden_channels=model_config.get('hidden_dim', 64),
         out_channels=model_config.get('output_dim', 64),

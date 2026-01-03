@@ -25,7 +25,7 @@ import torch
 import json
 
 from config import load_config
-from src.model import ProductionGraphSAGE
+from src.model import GraphSAGE
 from src.utils.metrics import (
     evaluate_embeddings,
     compute_neighbor_similarity,
@@ -84,7 +84,7 @@ def load_model_and_data(checkpoint_path: str, data_dir: Path, device: torch.devi
     feature_dim = config.get('features', {}).get('dimensions', 7)
 
     # Create model
-    model = ProductionGraphSAGE(
+    model = GraphSAGE(
         in_channels=feature_dim,
         hidden_channels=model_config.get('hidden_dim', 64),
         out_channels=model_config.get('output_dim', 64),

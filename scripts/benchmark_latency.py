@@ -9,8 +9,8 @@ This script benchmarks inference latency of the GraphSAGE encoder:
 - Comparison with/without caching
 
 Usage:
-    python scripts/benchmark_latency.py --checkpoint exports/graphsage_production.pt
-    python scripts/benchmark_latency.py --checkpoint exports/graphsage_production.pt --num-nodes 1000
+    python scripts/benchmark_latency.py --checkpoint exports/graphsage.pt
+    python scripts/benchmark_latency.py --checkpoint exports/graphsage.pt --num-nodes 1000
 """
 
 import argparse
@@ -26,9 +26,9 @@ import torch
 import numpy as np
 
 from config import load_config
-from src.model import ProductionGraphSAGE
+from src.model import GraphSAGE
 from src.data import GraphLoader
-from src.inference import MemoryR1StructuralEncoder, benchmark_encoder
+from src.inference import StructuralEncoder, benchmark_encoder
 
 
 def parse_args():
@@ -233,7 +233,7 @@ def main():
     model_config = config.get('model', {})
     feature_dim = config.get('features', {}).get('dimensions', 7)
 
-    model = ProductionGraphSAGE(
+    model = GraphSAGE(
         in_channels=feature_dim,
         hidden_channels=model_config.get('hidden_dim', 64),
         out_channels=model_config.get('output_dim', 64),
@@ -278,7 +278,7 @@ def main():
     )
 
     # Benchmark with encoder + cache
-    encoder = MemoryR1StructuralEncoder(
+    encoder = StructuralEncoder(
         model=model,
         device=str(device),
         cache_embeddings=True

@@ -6,17 +6,17 @@ for learning structural embeddings.
 
 Components:
     - layers.py: Custom layer wrappers and utilities
-    - graphsage.py: Main ProductionGraphSAGE model
+    - graphsage.py: Main GraphSAGE model
     - loss.py: Skip-gram loss with negative sampling
 
 The model takes node features and graph structure, then produces
 L2-normalized embeddings suitable for dot-product similarity.
 
 Example:
-    >>> from src.model import ProductionGraphSAGE, SkipGramLoss
+    >>> from src.model import GraphSAGE, SkipGramLoss
     >>>
     >>> # Create model
-    >>> model = ProductionGraphSAGE(
+    >>> model = GraphSAGE(
     ...     in_channels=7,
     ...     hidden_channels=64,
     ...     out_channels=64,
@@ -31,10 +31,10 @@ Example:
     >>> loss = loss_fn(embeddings, targets, contexts, negatives)
 """
 
-from .graphsage import ProductionGraphSAGE
+from .graphsage import GraphSAGE
 from .loss import SkipGramLoss
 
 __all__ = [
-    'ProductionGraphSAGE',
+    'GraphSAGE',
     'SkipGramLoss',
 ]

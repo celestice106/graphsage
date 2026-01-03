@@ -143,5 +143,5 @@ desktop.ini
 credentials.json
 secrets.yaml
 TRAINING_SKILLS.md
-
+graphsage_training_plan_v2.md
 !src/data/

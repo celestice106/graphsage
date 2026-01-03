@@ -9,7 +9,7 @@ Quick Start:
     >>> from scripts.encode import GraphSAGEEncoder
     >>>
     >>> # Load trained model
-    >>> encoder = GraphSAGEEncoder('exports/graphsage_production.pt')
+    >>> encoder = GraphSAGEEncoder('exports/graphsage.pt')
     >>>
     >>> # Encode a graph (auto-detects format)
     >>> embeddings = encoder.encode(graph)
@@ -19,8 +19,6 @@ Supported Formats:
     2. NetworkX Graph/DiGraph
     3. Dict with 'edge_index' and optional 'x' (features)
     4. Tuple of (edge_index, features)
-
-Author: Memory R1 Team
 """
 
 import torch
@@ -93,10 +91,10 @@ class GraphSAGEEncoder:
         model_config = config.get('model', {})
 
         # Import model class
-        from src.model.graphsage import ProductionGraphSAGE
+        from src.model.graphsage import GraphSAGE
 
         # Create model
-        model = ProductionGraphSAGE(
+        model = GraphSAGE(
             in_channels=config.get('features', {}).get('dimensions', 7),
             hidden_channels=model_config.get('hidden_dim', 64),
             out_channels=model_config.get('output_dim', 64),
@@ -316,7 +314,7 @@ class GraphSAGEEncoder:
         Compute structural features for nodes without features.
 
         Computes a 7-dimensional feature vector for each node based on
-        graph structure (similar to Memory R1 features but generic).
+        graph structure.
         """
         if not self.auto_features:
             raise ValueError(

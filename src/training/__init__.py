@@ -15,9 +15,9 @@ Components:
 
 Example:
     >>> from src.training import GraphSAGETrainer
-    >>> from src.model import ProductionGraphSAGE, SkipGramLoss
+    >>> from src.model import GraphSAGE, SkipGramLoss
     >>>
-    >>> model = ProductionGraphSAGE()
+    >>> model = GraphSAGE()
     >>> trainer = GraphSAGETrainer(
     ...     model=model,
     ...     features=features,

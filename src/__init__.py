@@ -1,5 +1,5 @@
 """
-GraphSAGE Training Module for Memory R1 Structural Embeddings.
+GraphSAGE Training Module for Memory Bank Structural Embeddings.
 
 This package implements a complete GraphSAGE training pipeline using the
 random walk co-occurrence approach (GDS-style) for learning structural
@@ -10,18 +10,17 @@ Submodules:
     - walks: Random walk generation and pair sampling
     - model: GraphSAGE architecture and loss functions
     - training: Training pipeline with early stopping and checkpointing
-    - inference: Production encoder with caching
+    - inference: Encoder with caching
     - utils: Helper functions for metrics, visualization, and graph operations
 
 Example:
     >>> from src.data import GraphSAGEViewExtractor, MemoryFeatureExtractor
     >>> from src.walks import RandomWalkGenerator, CooccurrencePairSampler
-    >>> from src.model import ProductionGraphSAGE
+    >>> from src.model import GraphSAGE
     >>> from src.training import GraphSAGETrainer
 """
 
 __version__ = "1.0.0"
-__author__ = "Memory R1 Team"
 
 # Version info
 VERSION_INFO = {

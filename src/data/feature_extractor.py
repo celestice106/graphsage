@@ -64,7 +64,7 @@ class MemoryFeatureExtractor:
         Initialize feature extractor.
 
         Args:
-            full_graph: Full Memory R1 graph (needed for entity information)
+            full_graph: Full Memory Bank graph (needed for entity information)
             node_mapping: Mapping from original memory ID to index
             include_entity_features: Whether to compute entity-derived features
         """
@@ -273,7 +273,7 @@ def compute_features_for_view(
     Convenience function to compute features for a GraphSAGE view.
 
     Args:
-        full_graph: Full Memory R1 graph
+        full_graph: Full Memory Bank graph
         view: Extracted GraphSAGE view
         include_entity_features: Whether to include entity-derived features
         normalize: Whether to apply normalization

@@ -1,11 +1,11 @@
 # Inference Module
 
-This module provides production-ready inference components for computing structural embeddings in the Memory R1 system.
+This module provides inference components for computing structural embeddings in the Memory Bank system.
 
 ## Components
 
 ### encoder.py
-- **MemoryR1StructuralEncoder**: Main encoder for Memory R1 integration
+- **StructuralEncoder**: Main encoder for Memory Bank integration
 - **benchmark_encoder()**: Benchmark encoder performance
 
 ### cache.py
@@ -17,11 +17,11 @@ This module provides production-ready inference components for computing structu
 ### Basic Inference
 
 ```python
-from src.inference import MemoryR1StructuralEncoder
+from src.inference import StructuralEncoder
 
 # Initialize encoder
-encoder = MemoryR1StructuralEncoder(
-    model_path='exports/graphsage_production.pt',
+encoder = StructuralEncoder(
+    model_path='exports/graphsage.pt',
     device='cuda',
     cache_embeddings=True
 )
@@ -53,16 +53,16 @@ stats = encoder.get_statistics()
 print(f"Cache hit rate: {stats['cache']['hit_rate']:.2%}")
 ```
 
-### Memory R1 Integration
+### Memory Bank Integration
 
 ```python
-# In Memory R1's structural embedding module:
+# In Memory Bank's structural embedding module:
 
-from src.inference import MemoryR1StructuralEncoder
+from src.inference import StructuralEncoder
 
 class StructuralEmbeddingModule:
-    def __init__(self, model_path='exports/graphsage_production.pt'):
-        self.encoder = MemoryR1StructuralEncoder(model_path)
+    def __init__(self, model_path='exports/graphsage.pt'):
+        self.encoder = StructuralEncoder(model_path)
 
     def get_embedding(self, memory_id, graph_store):
         return self.encoder.encode_by_id(memory_id, graph_store)
@@ -76,7 +76,7 @@ class StructuralEmbeddingModule:
 
 ## Caching Strategy
 
-The cache is designed for Memory R1's use case:
+The cache is designed for Memory Bank's use case:
 
 1. **Full Invalidation**: Any graph change invalidates entire cache
    - GraphSAGE embeddings depend on neighborhood structure
@@ -114,10 +114,10 @@ print(f"Throughput: {results['throughput_per_sec']:.1f}/s")
 For additional speedup, enable torch.compile:
 
 ```python
-encoder = MemoryR1StructuralEncoder(
+encoder = StructuralEncoder(
     model_path='model.pt',
     use_compile=True  # Enable torch.compile
 )
 ```
 
-Note: First inference will be slower due to compilation overhead.
+Note: First inference may be slower due to compilation overhead.

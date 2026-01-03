@@ -27,7 +27,7 @@ import json
 from config import load_config
 from src.data import GraphSAGEDataset
 from src.walks import RandomWalkGenerator, CooccurrencePairSampler, DegreeBiasedNegativeSampler
-from src.model import ProductionGraphSAGE, SkipGramLoss
+from src.model import GraphSAGE, SkipGramLoss
 from src.training import GraphSAGETrainer
 
 
@@ -166,7 +166,7 @@ def main():
     model_config = config.get('model', {})
     feature_dim = config.get('features', {}).get('dimensions', 7)
 
-    model = ProductionGraphSAGE(
+    model = GraphSAGE(
         in_channels=feature_dim,
         hidden_channels=model_config.get('hidden_dim', 64),
         out_channels=model_config.get('output_dim', 64),

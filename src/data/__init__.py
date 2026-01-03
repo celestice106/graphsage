@@ -2,13 +2,13 @@
 Data Module for GraphSAGE Training.
 
 This module handles:
-1. Loading graphs from Memory R1 system
+1. Loading graphs from Memory Bank system
 2. Extracting memory-only view for GraphSAGE
 3. Computing node features
 4. Creating PyTorch datasets
 
 Classes:
-    GraphLoader: Load full graph from Memory R1 storage
+    GraphLoader: Load full graph from Memory Bank storage
     GraphSAGEViewExtractor: Extract memory-only subgraph
     MemoryFeatureExtractor: Compute 7-dim features for memory nodes
     GraphSAGEDataset: PyTorch dataset wrapper

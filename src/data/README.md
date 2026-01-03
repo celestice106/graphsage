@@ -7,7 +7,7 @@ This module handles all data loading, processing, and preparation for GraphSAGE 
 ### graph_loader.py
 - **GraphLoader**: Unified interface for loading graphs from various sources
 - **MockGraphStore**: Mock graph store for testing and development
-- Supports loading from Memory R1, JSON files, or creating synthetic data
+- Supports loading from Memory Bank, JSON files, or creating synthetic data
 
 ### view_extractor.py
 - **GraphSAGEViewExtractor**: Extracts memory-only view from full heterogeneous graph
@@ -69,23 +69,10 @@ dataset.save('data/processed/my_dataset')
 dataset = GraphSAGEDataset.load('data/processed/my_dataset')
 ```
 
-### From Memory R1
-
-```python
-from memory_r1_bank import MemoryR1Bank
-from src.data import GraphSAGEDataset
-
-# Load from Memory R1 bank
-bank = MemoryR1Bank()
-# ... populate bank with memories ...
-
-dataset = GraphSAGEDataset.from_memory_r1(bank)
-```
-
 ## Data Flow
 
 ```
-Full Graph (Memory R1)
+Full Graph (Memory Bank)
         │
         ▼
   ┌─────────────────┐

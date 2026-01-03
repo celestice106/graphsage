@@ -1,10 +1,10 @@
 """
 Graph Loader Module.
 
-This module provides utilities for loading graphs from Memory R1 system
+This module provides utilities for loading graphs from Memory Bank system
 and creating mock graphs for testing/development.
 
-The GraphLoader class serves as an adapter between Memory R1's graph storage
+The GraphLoader class serves as an adapter between Memory Bank's graph storage
 and the GraphSAGE training pipeline.
 """
 
@@ -18,13 +18,13 @@ from enum import Enum
 
 
 class NodeType(Enum):
-    """Types of nodes in Memory R1 graph."""
+    """Types of nodes in Memory Bank graph."""
     MEMORY = "memory"
     ENTITY = "entity"
 
 
 class EdgeType(Enum):
-    """Types of edges in Memory R1 graph."""
+    """Types of edges in Memory Bank graph."""
     CAUSED_BY = "caused_by"
     NEXT_EVENT = "next_event"
     MENTION = "mention"
@@ -87,8 +87,8 @@ class MockGraphStore:
     """
     Mock graph store for testing and development.
 
-    This class simulates the Memory R1 graph store interface,
-    allowing GraphSAGE training without requiring the full Memory R1 system.
+    This class simulates the Memory Bank graph store interface,
+    allowing GraphSAGE training without requiring the full Memory Bank system.
 
     The mock store creates a realistic heterogeneous graph with:
     - Memory nodes (facts, events, experiences)
@@ -222,7 +222,7 @@ class MockGraphStore:
         """
         Generate a synthetic graph for testing.
 
-        Creates a realistic Memory R1 graph structure with:
+        Creates a realistic Memory Bank graph structure with:
         - Memory nodes with varied connectivity
         - Entity nodes as semantic anchors
         - Causal chains (caused_by edges)
@@ -423,15 +423,15 @@ class GraphLoader:
     Load graphs from various sources for GraphSAGE training.
 
     This class provides a unified interface for loading graphs from:
-    - Memory R1 graph store (production)
+    - Memory Bank graph store 
     - JSON files (saved graphs)
     - Mock graph store (testing)
 
     Example:
         >>> loader = GraphLoader()
         >>>
-        >>> # Load from Memory R1 (when integrated)
-        >>> graph = loader.from_memory_r1(memory_bank)
+        >>> # Load from Memory Bank (when integrated)
+        >>> graph = loader.from_memory_bank(memory_bank)
         >>>
         >>> # Load from file
         >>> graph = loader.from_file("data/raw/graph.json")
@@ -441,18 +441,18 @@ class GraphLoader:
     """
 
     @staticmethod
-    def from_memory_r1(memory_bank: Any) -> MockGraphStore:
+    def from_memory_bank(memory_bank: Any) -> MockGraphStore:
         """
-        Load graph from Memory R1 bank.
+        Load graph from Memory Bank.
 
-        This method extracts the graph structure from a Memory R1 bank
+        This method extracts the graph structure from a Memory Bank
         and wraps it in a MockGraphStore for uniform interface.
 
         Args:
-            memory_bank: Memory R1 bank instance
+            memory_bank: Memory Bank instance
 
         Returns:
-            MockGraphStore populated with Memory R1 data
+            MockGraphStore populated with Memory Bank data
         """
         store = MockGraphStore()
 

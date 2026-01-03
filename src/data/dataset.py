@@ -88,7 +88,7 @@ class GraphSAGEDataset:
         Initialize dataset.
 
         Args:
-            full_graph: Full Memory R1 graph
+            full_graph: Full Memory Bank graph
             view: Extracted GraphSAGE view
             features: Computed node features
         """
@@ -190,25 +190,25 @@ class GraphSAGEDataset:
         return cls(full_graph, view, features)
 
     @classmethod
-    def from_memory_r1(
+    def from_memory_bank(
         cls,
         memory_bank: Any,
         undirected: bool = True,
         include_entity_features: bool = True
     ) -> 'GraphSAGEDataset':
         """
-        Create dataset from Memory R1 bank.
+        Create dataset from Memory Bank.
 
         Args:
-            memory_bank: Memory R1 bank instance
+            memory_bank: Memory Bank instance
             undirected: Whether to treat edges as undirected
             include_entity_features: Whether to include entity-derived features
 
         Returns:
             GraphSAGEDataset
         """
-        # Load from Memory R1
-        full_graph = GraphLoader.from_memory_r1(memory_bank)
+        # Load from Memory Bank
+        full_graph = GraphLoader.from_memory_bank(memory_bank)
 
         # Extract view
         extractor = GraphSAGEViewExtractor(full_graph)
