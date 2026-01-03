@@ -60,10 +60,10 @@ python scripts/export_model.py --checkpoint checkpoints/best_model.pt
 
 ```
 graphsage_training/
-├── config/                 # Configuration files
+├── config/                
 │   └── config.yaml       # Default hyperparameters
 │
-├── src/                   # Source code
+├── src/                  
 │   ├── data/             # Graph loading & feature extraction
 │   │   ├── graph_loader.py      # Load graphs from various sources
 │   │   ├── view_extractor.py    # Extract memory-only subgraph
@@ -80,30 +80,30 @@ graphsage_training/
 │   │   ├── layers.py            # Custom layers
 │   │   └── loss.py              # Skip-gram & other losses
 │   │
-│   ├── training/         # Training pipeline
+│   ├── training/         
 │   │   ├── trainer.py           # Main training loop
 │   │   ├── batch_generator.py   # Batch creation
 │   │   └── callbacks.py         # Early stopping, checkpoints
 │   │
 │   ├── inference/        
-│   │   ├── encoder.py           # Memory Bank encoder interface
+│   │   ├── encoder.py           # Encoder interface
 │   │   └── cache.py             # Embedding cache
 │   │
-│   └── utils/            # Utilities
+│   └── utils/            
 │       ├── metrics.py           # Evaluation metrics
 │       ├── visualization.py     # t-SNE, plots
-│       └── graph_utils.py       # Graph utilities
+│       └── graph_utils.py       
 │
-├── scripts/              # Runnable scripts
-│   ├── train.py         # Training entry point
-│   ├── evaluate.py      # Evaluation script
-│   └── export_model.py  # Export for production
+├── scripts/              
+│   ├── train.py         
+│   ├── evaluate.py      
+│   └── export_model.py  
 │
-├── notebooks/            # Jupyter notebooks
-│   ├── train_colab.ipynb       # Colab training notebook
-│   └── lesson_graphsage.ipynb  # Educational notebook
+├── notebooks/            
+│   ├── document.ipynb       # Project summary
+│   └── training.ipynb       # Colab training 
 │
-└── tests/               # Unit tests
+└── tests/               
 ```
 
 ## Key Concepts
@@ -118,9 +118,9 @@ Each memory node has 7 computed features:
 | 1 | `next_event_degree` | Number of temporal sequence edges |
 | 2 | `num_entities` | Entities mentioned by this memory |
 | 3 | `shared_entity_neighbors` | Neighbors sharing entities |
-| 4 | `is_cause` | Binary: has outgoing causal edges |
-| 5 | `is_effect` | Binary: has incoming causal edges |
-| 6 | `has_successor` | Binary: has temporal successors |
+| 4 | `is_cause` | Has outgoing causal edges |
+| 5 | `is_effect` | Has incoming causal edges |
+| 6 | `has_successor` | Has temporal successors |
 
 ### 2. GraphSAGE Architecture
 
@@ -140,9 +140,9 @@ L2 Normalization
 Output Embeddings [N, 64]
 ```
 
-- **2 layers** = captures 2-hop neighborhood structure
-- **Mean aggregation** = stable and effective
-- **L2 normalization** = enables dot-product similarity
+- **2 layers** : captures 2-hop neighborhood structure
+- **Mean aggregation** : stable and effective
+- **L2 normalization** : enables dot-product similarity
 
 ### 3. Skip-gram Loss with Scale Factor
 
@@ -158,7 +158,7 @@ pos_loss = -log(sigmoid(dot_product * 5.0))  # Now sigmoid can reach 0.99
 neg_loss = -log(sigmoid(-dot_product * 5.0)) # Now sigmoid can reach 0.01
 ```
 
-Without scaling, training metrics plateau with `pos_prob ~0.71`, `neg_prob ~0.50`.
+Without scaling, training metrics plateau with `positive_probabilities ~0.71`, `negative_probabilities ~0.50`.
 
 ### 4. Training Signal Amplification
 
@@ -171,7 +171,7 @@ From 500 nodes × 10 walks × 80 length × ~10 context = millions of pairs.
 
 ## Configuration
 
-Key hyperparameters in `config/default.yaml`:
+Key hyperparameters in `config/config.yaml`:
 
 ```yaml
 walks:
@@ -273,10 +273,6 @@ scikit-learn>=1.0.0
 matplotlib>=3.5.0
 tqdm>=4.64.0
 ```
-
-## License
-
-MIT License - See LICENSE file.
 
 ## Acknowledgments
 
