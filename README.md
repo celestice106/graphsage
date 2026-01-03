@@ -1,6 +1,6 @@
 # GraphSAGE Structural Embedding Training
 
-A production-ready pipeline for training GraphSAGE models to generate structural embeddings for memory graphs. Designed for the Memory R1 dual-embedding system.
+A production-ready pipeline for training GraphSAGE models to generate structural embeddings for memory graphs. Designed for the Memory R1-style Memory Bank with dual-embedding system.
 
 ## Overview
 
