@@ -8,7 +8,7 @@ This project trains a Graph Neural Network (GraphSAGE) to learn **structural emb
 
 ### The Problem We Solve
 
-Current AI chatbots are **stateless**—they forget everything once a user ends their session. While naive RAG (Retrieval-Augmented Generation) approaches can partially address this by storing and retrieving past conversations, they lack awareness of **temporal context**: information from the distant past may still be highly relevant to today's questions, but simple similarity-based retrieval cannot capture this.
+Current AI chatbots are **stateless**—they forget everything once a user ends their session. While naive RAG (Retrieval-Augmented Generation) approaches can partially address this by storing and retrieving past conversations, they lack awareness of **temporal context**: similarity-based retrieval may capture memories from the distant past that are no longer relevant to today's conversation.
 
 Our solution introduces a **dual-embedding system** (structural + semantic) to represent each memory entry in a memory bank. Combined with two **RL-trained agents** that operate and distill memories across sessions (inspired by the [Memory R1 paper](https://arxiv.org/abs/2508.19828)), this architecture successfully overcomes the long-term memory problem. Structural embeddings enable agents to understand not just *what* a memory contains, but *where* and *when* it exists in the long-horizon conversation graph spanning multiple sessions.
 
